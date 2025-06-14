@@ -1,24 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function ResultDisplay({ result }) {
+    const [copied, setCopied] = useState(false);
+
     const generateShareText = () => {
         let text = "Rincian Tagihan:\n\n";
-
         for (const [name, { total, items }] of Object.entries(result)) {
             text += `Nama: ${name}\n`;
-            text += `Total: Rp${total.toLocaleString("id-ID")}\n\n`;
+            text += `Total: Rp${total.toLocaleString("id-ID")}\n`;
             for (const item of Object.values(items)) {
                 text += `- ${item.name} (${item.quantity} x Rp${item.price.toLocaleString("id-ID")}) = Rp${item.subtotal.toLocaleString("id-ID")}\n`;
             }
-
+            text += `\n`;
         }
-
-        return encodeURIComponent(text);
+        return text;
     };
 
+    const whatsappLink = `https://wa.me/?text=${encodeURIComponent(generateShareText())}`;
 
-
-    const whatsappLink = `https://wa.me/?text=${generateShareText()}`;
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(generateShareText());
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset status setelah 2 detik
+        } catch (err) {
+            alert("Gagal menyalin teks");
+        }
+    };
 
     return (
         <div className="mt-6 p-6 rounded-xl border border-[#E0EDF1] bg-[#F5F9FA] shadow-sm">
@@ -56,13 +64,20 @@ export default function ResultDisplay({ result }) {
                 ))}
             </div>
 
-            {/* Tombol Share WhatsApp */}
-            <div className="mt-6 text-right">
+            {/* Tombol Share dan Salin */}
+            <div className="mt-6 flex flex-col sm:flex-row justify-end gap-4">
+                <button
+                    onClick={handleCopy}
+                    className="px-4 py-2 bg-[#F5F9FA] border border-gray-300 rounded-lg  transition cursor-pointer"
+                >
+                    {copied ? "Tersalin!" : "Salin Rincian"}
+                </button>
+
                 <a
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
                 >
                     Share via WhatsApp
                 </a>

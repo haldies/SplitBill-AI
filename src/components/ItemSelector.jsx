@@ -149,7 +149,10 @@ export default function ItemSelector({ items, friends, onDone }) {
                             <div key={item.item} className="flex items-center justify-between">
                                 <div className="flex-1">
                                     <div className="font-medium text-[#3A6B7A]">{item.item}</div>
-                                    <div className="text-sm text-[#5D8B9C]">Rp{item.price.toLocaleString()}</div>
+                                    <div className="text-sm text-[#5D8B9C]">
+                                        {item.price != null ? `Rp${item.price.toLocaleString()}` : <span className="text-red-400">Harga tidak tersedia</span>}
+                                    </div>
+
                                 </div>
 
                                 <div className="flex items-center gap-2">
