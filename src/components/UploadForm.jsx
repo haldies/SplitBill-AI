@@ -63,7 +63,7 @@ export default function UploadForm({ onExtracted }) {
             const formData = new FormData();
             formData.append("image", file);
 
-            const response = await axios.post("http://127.0.0.1:8080/vision-analyze", formData, {
+            const response = await axios.post("https://be-splitbill-50598077190.asia-southeast2.run.app/vision-analyze", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             console.log("Response from server:", response);
